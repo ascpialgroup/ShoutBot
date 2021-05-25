@@ -1,162 +1,204 @@
 {
-	"PREFIX": "&",
+    "PREFIX": "&",
 
-	"SHARED": {
-		"deletionQueueSize": 1000
-	},
+    "SHARED": {
+        "deletionQueueSize": 1000
+    },
 
-	"SHOUTBOX": {
-		"channel": 809440143734996992
-	},
+    "SHOUTBOX": {
+        "channel": 809440143734996992
+    },
 
-	"REQUESTS": {
-		"retry": {
-			"total": 1,
-			"status_forcelist": [429, 500, 502, 503, 504],
-			"method_whitelist": ["GET", "POST", "PUT", "DELETE", "TRACE"]
-		}
-	},
+    "REQUESTS": {
+        "retry": {
+            "total": 1,
+            "status_forcelist": [429, 500, 502, 503, 504],
+            "method_whitelist": ["GET", "POST", "PUT", "DELETE", "TRACE"]
+        }
+    },
 
-	"TIPLANET": {
-		"host": "tiplanet.org",
-		"login": "/forum/ucp.php?mode=login",
-		"logout": "/forum/ucp.php?mode=logout",
-		"cookies": {
-			"sid": "phpbb3_pasr5_sid"
-		},
-		"TiBotId": 2147483647,
-		"chat": "/forum/chat/?ajax=true",
-		"keepAwake": 40000,
-		"pollingInterval": 2,
-		"user": {},
-		"bots": [258498, 251027],
-		"selfBot": false,
-		"sendConnections": true,
-		"webhook": {},
-		"thumbnails": {
-			"maxWidth": 125,
-			"maxHeight": 125
-		},
-		"roles": {
-			"53": "🔴 Admin",
-			"42": "🟢 Modo global",
-			"102": "🟢 Modo",
-			"141": "⚒️ Fondateur",
-			"161": "🟣 Bureau UPECS",
-			"171": "🟣 Membre UPECS",
-			"121": "⭐ Premium",
-			"181": "💲 Généreux",
-			"182": "💛 Généreux",
-			"241": "✨ VIP",
-			"251": "🌟 VIP+",
-			"261": "🌟 VIP++",
-			"221": "💻 Programmeur",
-			"271": "Ω Omega",
-			"281": "📋 Concepteur",
-			"82": "📝 Rédacteur",
-			"202": "🎆 Ambianceur",
-			"231": "🤝 Partenaire"
-		},
+    "TIPLANET": {
+        "host": "tiplanet.org",
+        "login": "/forum/ucp.php?mode=login",
+        "logout": "/forum/ucp.php?mode=logout",
+        "cookies": {
+            "sid": "phpbb3_pasr5_sid"
+        },
+        "TiBotId": 2147483647,
+        "chat": "/forum/chat/?ajax=true",
+        "keepAwake": 40000,
+        "pollingInterval": 2,
+        "user": {},
+        "bots": [258498, 251027],
+        "selfBot": false,
+        "sendConnections": true,
+        "urlConnection": "http://88.139.48.9/cgi-bin/show?string=",
+        "webhook": {},
+        "thumbnails": {
+            "maxWidth": 125,
+            "maxHeight": 125
+        },
+        "roles": {
+            "53": "🔴 Admin",
+            "42": "🟢 Modo global",
+            "102": "🟢 Modo",
+            "141": "⚒️ Fondateur",
+            "161": "🟣 Bureau UPECS",
+            "171": "🟣 Membre UPECS",
+            "121": "⭐ Premium",
+            "181": "💲 Généreux",
+            "182": "💛 Généreux",
+            "241": "✨ VIP",
+            "251": "🌟 VIP+",
+            "261": "🌟 VIP++",
+            "221": "💻 Programmeur",
+            "271": "Ω Omega",
+            "281": "📋 Concepteur",
+            "82": "📝 Rédacteur",
+            "202": "🎆 Ambianceur",
+            "231": "🤝 Partenaire"
+        },
+        "TIPLANET": {
+            "host": "tiplanet.org",
+            "login": "/forum/ucp.php?mode=login",
+            "logout": "/forum/ucp.php?mode=logout",
+            "cookies": {
+                "sid": "phpbb3_pasr5_sid"
+            },
+            "TiBotId": 2147483647,
+            "chat": "/forum/chat/?ajax=true",
+            "keepAwake": 40000,
+            "pollingInterval": 2,
+            "user": {},
+            "bots": [258498, 251027],
+            "selfBot": false,
+            "sendConnections": true,
+            "urlConnection": "http://88.139.48.9/cgi-bin/show?string=",
+            "webhook": {},
+            "thumbnails": {
+                "maxWidth": 125,
+                "maxHeight": 125
+            },
+            "roles": {
+                "53": "🔴 Admin",
+                "42": "🟢 Modo global",
+                "102": "🟢 Modo",
+                "141": "⚒️ Fondateur",
+                "161": "🟣 Bureau UPECS",
+                "171": "🟣 Membre UPECS",
+                "121": "⭐ Premium",
+                "181": "💲 Généreux",
+                "182": "💛 Généreux",
+                "241": "✨ VIP",
+                "251": "🌟 VIP+",
+                "261": "🌟 VIP++",
+                "221": "💻 Programmeur",
+                "271": "Ω Omega",
+                "281": "📋 Concepteur",
+                "82": "📝 Rédacteur",
+                "202": "🎆 Ambianceur",
+                "231": "🤝 Partenaire"
+            },
 
-		"emojis": {
-			"><": "😆",
-			":p": "😛",
-			":P": "😛",
-			";p": "😜",
-			";P": "😜",
-			":D": "😁",
-			":)": "🙂",
-			":(": "🙁",
-			":o": "😮",
-			":~o": "😮",
-			":'(": "😢",
-			";)": "😉",
-			":|": "😐",
-			":?": "🥴",
-			"8-)": "🤓",
-			"B-)": "😎",
-			"0:]": "😇",
-			">:]": "😈",
-			":'D": "😂",
-			":bj:": "👍",
-			"/!\\": "⚠️",
-			":favorite:": "❤️",
-			":help:": "❔",
-			":important:": "❗",
-			":idea:": "💡",
-			":error:": "⛔",
-			":lumi:": "<:lumi:813709208670568448>",
-			":whistle:": "<:whistle:813709493182529578>",
-			":troll:": "<:troll:810143192581668885>",
-			":wat:": "<:wat:810143891855507517>",
-			"^^": "<:eyebrows:829039576747606056>",
-			":#tritop#:": "<:tritop:813702986831757372>",
-			":mmm:": "<:mmm:813704155469971487>",
-			":#roll#:": "<:mmm:813704155469971487>",
-			":#fou#:": "<:fou:813706601851912223>",
-			":walrii:": "<:walrii:304168280304648192>",
-			":-@": "<:rage:813707452025143307>"
-		},
-		"censorship": {
-			"d[ée]merde": "débrouille",
-			"emm?erde": "embrouille",
-			"merde": "saperlipopette",
-			"bordel": "bazar",
-			"foutre": "faire",
-			"chiant": "enquiquinant",
-			"chier": "suer",
-			"couille": "bonbon",
-			"enculée?": "fot-en-cul",
-			"enculer": ["dériver", "intégrer"],
-			"pute": ["fille de joie", "gourgandine", "coureuse de remparts"],
-			"putes": [
-				"filles de joie",
-				"gourgandines",
-				"coureuses de remparts"
-			],
-			"puta?in": [
-				"fichtre",
-				"diantre",
-				"bigre",
-				"sacrebleu",
-				"punaise",
-				"purée"
-			],
-			"conn?ard": ["crétin", "benêt", "bêta", "cornichon"],
-			"conn?asse": ["cruche", "andouille"],
-			"pr[eé][nt]ium": "pre__m__ium",
-			"bonjours": "bonjour~~s~~",
-			"ce jeux": "ce jeu~~x~~",
-			"le jeux": "le jeu~~x~~",
-			"un jeux": "un jeu~~x~~",
-			"du jeux": "du jeu~~x~~",
-			"en ?faite": "en fait",
-			"j'ai fais": "j'ai fait",
-			"je fait": "je fais"
-		},
-		"notif": {},
-		"irc": {
-			"id": 822125454588641340
-		}
-	},
+            "emojis": {
+                "><": "😆",
+                ":p": "😛",
+                ":P": "😛",
+                ";p": "😜",
+                ";P": "😜",
+                ":D": "😁",
+                ":)": "🙂",
+                ":(": "🙁",
+                ":o": "😮",
+                ":~o": "😮",
+                ":'(": "😢",
+                ";)": "😉",
+                ":|": "😐",
+                ":?": "🥴",
+                "8-)": "🤓",
+                "B-)": "😎",
+                "0:]": "😇",
+                ">:]": "😈",
+                ":'D": "😂",
+                ":bj:": "👍",
+                "/!\\": "⚠️",
+                ":favorite:": "❤️",
+                ":help:": "❔",
+                ":important:": "❗",
+                ":idea:": "💡",
+                ":error:": "⛔",
+                ":lumi:": "<:lumi:813709208670568448>",
+                ":whistle:": "<:whistle:813709493182529578>",
+                ":troll:": "<:troll:810143192581668885>",
+                ":wat:": "<:wat:810143891855507517>",
+                "^^": "<:eyebrows:829039576747606056>",
+                ":#tritop#:": "<:tritop:813702986831757372>",
+                ":mmm:": "<:mmm:813704155469971487>",
+                ":#roll#:": "<:mmm:813704155469971487>",
+                ":#fou#:": "<:fou:813706601851912223>",
+                ":walrii:": "<:walrii:304168280304648192>",
+                ":-@": "<:rage:813707452025143307>"
+            },
+            "censorship": {
+                "d[ée]merde": "débrouille",
+                "emm?erde": "embrouille",
+                "merde": "saperlipopette",
+                "bordel": "bazar",
+                "foutre": "faire",
+                "chiant": "enquiquinant",
+                "chier": "suer",
+                "couille": "bonbon",
+                "enculée?": "fot-en-cul",
+                "enculer": ["dériver", "intégrer"],
+                "pute": ["fille de joie", "gourgandine", "coureuse de remparts"],
+                "putes": [
+                    "filles de joie",
+                    "gourgandines",
+                    "coureuses de remparts"
+                ],
+                "puta?in": [
+                    "fichtre",
+                    "diantre",
+                    "bigre",
+                    "sacrebleu",
+                    "punaise",
+                    "purée"
+                ],
+                "conn?ard": ["crétin", "benêt", "bêta", "cornichon"],
+                "conn?asse": ["cruche", "andouille"],
+                "pr[eé][nt]ium": "pre__m__ium",
+                "bonjours": "bonjour~~s~~",
+                "ce jeux": "ce jeu~~x~~",
+                "le jeux": "le jeu~~x~~",
+                "un jeux": "un jeu~~x~~",
+                "du jeux": "du jeu~~x~~",
+                "en ?faite": "en fait",
+                "j'ai fais": "j'ai fait",
+                "je fait": "je fais"
+            },
+            "notif": {},
+            "irc": {
+                "id": 822125454588641340
+            }
+        },
 
-	"DISCORD": {
-		"useDisplayName": true,
-		"roles": {
-			"809439809209892866": "fuchsia // pouf",
-			"415190599780532224": "red     // admin",
-			"339837948897918977": "green   // modoG",
-			"339837454519500800": "#00af00 // modo",
-			"339839953515053066": "#0000cf // redac - écrivain",
-			"339840793357451275": "#0000ff // anim - ambianceur",
-			"339842895333031936": "#00007f // prog - concepteur",
-			"339841307939700747": "#ffe043 // premium",
-			"0": "black nocomma"
-		},
-		"cogs": {
-			"latex": {
-				"enable": true
-			}
-		}
-	}
-}
+        "DISCORD": {
+            "useDisplayName": true,
+            "roles": {
+                "809439809209892866": "fuchsia // pouf",
+                "415190599780532224": "red     // admin",
+                "339837948897918977": "green   // modoG",
+                "339837454519500800": "#00af00 // modo",
+                "339839953515053066": "#0000cf // redac - écrivain",
+                "339840793357451275": "#0000ff // anim - ambianceur",
+                "339842895333031936": "#00007f // prog - concepteur",
+                "339841307939700747": "#ffe043 // premium",
+                "0": "black nocomma"
+            },
+            "cogs": {
+                "latex": {
+                    "enable": true
+                }
+            }
+        }
+    }

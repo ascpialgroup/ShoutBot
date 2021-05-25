@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from discord import Webhook, RequestsWebhookAdapter, AllowedMentions, Object
+from datetime import datetime
 
 from .parser import Parser
 from .libs.setInterval import setInterval
@@ -69,13 +70,13 @@ class tiplanet:
 			payload["lastID"] = self.lastId
 		chat = self.session.post(self.getUrl(self.config.chat), data=payload)
 		soup = BeautifulSoup(chat.text, "html.parser")
-
 		messages = [{
 			"id": message.get("id"),
 			"userId": message.get("userid"),
 			"userRole": message.get("userrole"),
 			"userName": message.username.text,
-			"content": message.find('text').text
+			"content": message.find('text').text,
+			"datetime": datetime.strptime(message.get('datetime'), "%a, %d %b %Y %H:%M:%S %z")
 		} for message in soup.find_all("message")]
 
 		return messages
@@ -144,21 +145,24 @@ class tiplanet:
 	async def postDiscordMessage(self, message, bot):
 		if (message["content"].split(' ')[0] in ['/login', '/logout']) and self.config.sendConnections:
 			msg = message["content"]
+			dateUrl = self.config.urlConnection+message["datetime"].strftime("%H:%M:%S")
 			if msg.startswith('/login'):
-				emoji = '📥'
+				emoji = f'[📥]({dateUrl})'
 			if msg.startswith('/logout'):
-				emoji = '⏰' if msg.endswith(' Timeout') else '📤'
+				emoji = f'[⏰]({dateUrl})' if msg.endswith(' Timeout') else f'[📤]({dateUrl})'
 			pseudo = self.parser.parse_basic(msg.replace('/login ', '').replace('/logout ', '').replace(' Timeout', ''))
 			if self.connectionMsg == None:
-				channel = await bot.fetch_channel(self.fullconfig.SHOUTBOX.channel)
-				self.connectionMsg = await channel.send(f'{emoji} {pseudo}')
+				self.connectionMsg = self.webhook.send(f'{emoji} {pseudo}', wait=True, avatar_url=message['avatar'], username=message["userName"])
 			else:
 				content = self.connectionMsg.content.rstrip()
 				if content.endswith(pseudo.strip()):
 					content = f'{content[:-len(pseudo)-1]}{emoji} {pseudo}'
 				else:
 					content = f'{content}, {emoji} {pseudo}'
-				await self.connectionMsg.edit(content=content)
+				if len(content)>2000:
+					self.connectionMsg = self.webhook.send(f'{emoji} {pseudo}', wait=True, avatar_url=message['avatar'], username=message["userName"])
+			    else:
+					self.connectionMsg.edit(content=content)
 			return
 
 		role = message["userRole"]
