@@ -33,6 +33,7 @@ class tiplanet:
 		self.deletionQueue = [(0, 0) for i in range(config.SHARED.deletionQueueSize)]
 		self.deletionQueueIndex = 0
 		self.login()
+		self.connectionMsg = None
 
 
 	def login(self):
@@ -47,7 +48,7 @@ class tiplanet:
 			'login': 'Connexion'
 		}
 
-		self.session.post(loginUrl, data=payload)
+		self.session.post(loginUrl, data=payload, verify=not self.config.localServer)
 		self.keepAwake = setInterval(self.login, self.config.keepAwake)
 
 	def logout(self):
@@ -117,13 +118,17 @@ class tiplanet:
 			await self.deleteDiscordMessage(bot, deletion['content'].strip().split(' ')[-1])
 
 		for message in messages:
+			message['avatar'] = f"https://tiplanet.org/forum/avatar.php?id={message['userId']}"
 			if int(message["userId"]) in self.config.bots: # if it's a bot we parse content for the user who post
 				content = message["content"]
-				match = re.match(r"^\[b\]\[color=(#?\w+)\]((?:\[IRC\]\s*)?[^\[]+)\[\/color\]\[\/b\]: ", content)
+				match = re.match(r"^\[b]\[color=(#?\w+)]\[url=(?P<urlinfo>.+?)](?P<name>.+?)\[\/url]\[\/color]\[\/b]: ", content)
+				urlinfo = match.group("urlinfo")
+				# urlinfo might contain more than the avatar in the future?
+				message['avatar'] = f'https://cdn.discordapp.com/{urlinfo}'
 				message["content"] = content[len(match.group()):]
-				message["userName"] = match.group(2)
+				message["userName"] = match.group("name")
 
-			self.postDiscordMessage(message)
+			await self.postDiscordMessage(message, bot)
 
 	async def deleteDiscordMessage(self, bot, id):
 		try:
@@ -136,22 +141,42 @@ class tiplanet:
 		finally:
 			pass
 
-	def postDiscordMessage(self, message):
-		if (message["content"].startswith("/login ") or message["content"].startswith("/logout ")) and not self.config.sendConnections:
+	async def postDiscordMessage(self, message, bot):
+		if (message["content"].split(' ')[0] in ['/login', '/logout']) and self.config.sendConnections:
+			msg = message["content"]
+			if msg.startswith('/login'):
+				emoji = '📥'
+			if msg.startswith('/logout'):
+				emoji = '⏰' if msg.endswith(' Timeout') else '📤'
+			pseudo = self.parser.parse_basic(msg.replace('/login ', '').replace('/logout ', '').replace(' Timeout', ''))
+			if self.connectionMsg == None:
+				channel = await bot.fetch_channel(self.fullconfig.SHOUTBOX.channel)
+				self.connectionMsg = await channel.send(f'{emoji} {pseudo}')
+			else:
+				content = self.connectionMsg.content.rstrip()
+				if content.endswith(pseudo.strip()):
+					content = f'{content[:-len(pseudo)-1]}{emoji} {pseudo}'
+				else:
+					content = f'{content}, {emoji} {pseudo}'
+				await self.connectionMsg.edit(content=content)
 			return
 
 		role = message["userRole"]
-		if role in self.config.roles:
-			roleSuffix = f' {self.config.roles[role][0]}'
-		else:
-			roleSuffix = ''
+		roleSuffix = f' {self.config.roles[role][0]}' if role in self.config.roles else ''
+
+		privMsgSuffix = ' (murmure)' if message['content'].startswith('/privmsg ') else ''
+
+		msg = self.parser.parse_bbcode2markdown(message["content"], int(message["userId"]))
+		if msg == None: return
+
+		self.connectionMsg = None
 
 		ds_msg = self.webhook.send(
-			self.parser.parse_bbcode2markdown(message["content"], int(message["userId"])),
+			msg,
 			wait=True, # so we can get the ds_msg
-			avatar_url=f"https://tiplanet.org/forum/avatar.php?id={message['userId']}",
-			username=f'{self.fullconfig.DEVPREFIX}{message["userName"]}{roleSuffix}',
-			allowed_mentions=AllowedMentions(everyone=False, users=False, roles=False, replied_user=False)
+			avatar_url=message['avatar'],
+			username=f'{self.fullconfig.DEVPREFIX}{message["userName"]}{privMsgSuffix}{roleSuffix}',
+			allowed_mentions=AllowedMentions(everyone=False, users=[await bot.fetch_user(self.config.notif[user]) for user in self.config.notif], roles=False, replied_user=False)
 		)
 		if ds_msg != None:
 			self.deletionQueue[self.deletionQueueIndex] = (int(message["id"]), ds_msg.id)
@@ -180,6 +205,9 @@ class tiplanet:
 		return f"https://{self.config.host}{url}"
 
 	def loadLastIdFile(self):
+		if self.config.localServer:
+			self.lastId = 0
+			return
 		try:
 			with open(os.path.join(os.path.dirname(__file__), '../lastId.json'), "r") as file:
 				file = json.load(file)

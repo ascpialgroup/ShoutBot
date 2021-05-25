@@ -21,36 +21,61 @@ class bonfire:
 			except:
 				raise("error while updating chat")
 
-			if chat_id != None:
+			if chat_id != None and not message.content.startswith('/'):
 				self.chat.deletionQueue[self.chat.deletionQueueIndex] = (int(chat_id), message.id)
 				self.chat.deletionQueueIndex = (self.chat.deletionQueueIndex + 1) % len(self.chat.deletionQueue)
+				self.chat.connectionMsg = None
 
 
 	def generateMessage(self, message):
 		quotePrefix = ''
 		attachmentSuffix = ''
 
-		# this is a reply, add quote
+		# this is a reply, add quote and potential /msg
 		if (message.reference):
 			ref = message.reference
-			quotePrefix = f'[quote={self.removeDiscordID(ref.resolved.author)}]{self.parser.parse_markdown2bbcode(ref.resolved.clean_content)}[/quote] '
+			author = self.getName(ref.resolved.author)
+
+			quote = ref.resolved.clean_content
+			quote = self.parser.remove_quotes(quote)
+			quote = self.parser.parse_markdown2bbcode(quote)
+
+			privPrefix = ''
+			if ' (murmure)' in author:
+				privPrefix = f'/msg {author.split(" (murmure)")[0]} '
+				author = author.replace(' (murmure)', '')
+
+			quotePrefix = f'{privPrefix}[quote={author}]{quote}[/quote] '
 
 		# this contains files
 		if (message.attachments != None and len(message.attachments) != 0):
 			attachmentSuffix = '\n'.join([self.attachmentToString(a) for a in message.attachments])
 			attachmentSuffix = f'\n{attachmentSuffix}'
 
-		name = f"[b][color=block]{'[IRC] ' if str(message.webhook_id) == str(self.config.TIPLANET.irc.id) else ''}{self.removeDiscordID(message.author)}[/color][/b]: "
+		name = f"{self.config.DEVPREFIX}{self.getName(message.author)}"
+		name = f"{name}{' ☎️' if str(message.webhook_id) == str(self.config.TIPLANET.irc.id) else ''}"
+		name = f"[url={str(message.author.avatar_url).split('cdn.discordapp.com/')[-1]}]{name}[/url]"
+		name = f"[b][color={self.getColor(message.author)}]{name}[/color][/b]: "
 
 		msg = self.parser.parse_markdown2bbcode(message.clean_content)
 
-		return f"{f'{self.config.DEVPREFIX}{name}' if not self.config.TIPLANET.selfBot else ''}{quotePrefix}{msg}{attachmentSuffix}"
+		return f"{name if not self.config.TIPLANET.selfBot else ''}{quotePrefix}{msg}{attachmentSuffix}"
 
-	def removeDiscordID(self, username):
-		return str(username)[0:-5]
+	def getColor(self, author):
+		try:
+			roleIds = [int(role.id) for role in author.roles]
+			for roleId, value in self.config.DISCORD.roles.items():
+				if int(roleId) in roleIds:
+					return value.split('//')[0].strip()
+		except:
+			pass
+		return 'block'
+
+	def getName(self, user):
+		return user.display_name if self.config.DISCORD.useDisplayName else user.name
 
 	def attachmentToString(self, attachment):
-		extension = attachment.url.split('.')[-1]
+		extension = attachment.url.split('.')[-1].lower()
 
 		if attachment.width != None and extension in ['png', 'jpg', 'jpeg', 'gif', 'bmp']:
 			width, height = self.thumbnailDimensions(attachment.width, attachment.height)
