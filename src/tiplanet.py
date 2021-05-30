@@ -155,18 +155,14 @@ class tiplanet:
 			emoji= f"[{emoji}]({self.config.urlShowText}{pseudo}+{emoji}+{date})"
 			if self.connectionMsg == None:
 				channel = await bot.fetch_channel(self.fullconfig.SHOUTBOX.channel)
-				self.connectionMsg = self.webhook.send(f'{emoji} {pseudo}', wait=True, avatar_url=bot.user.avatar_url, username=bot.user.name)
+				self.connectionMsg = await channel.send(f'{emoji} {pseudo}')
 			else:
 				content = self.connectionMsg.content.rstrip()
 				if content.endswith(pseudo.strip()):
 					content = f'{content[:-len(pseudo)-1]}{emoji} {pseudo}'
 				else:
 					content = f'{content}, {emoji} {pseudo}'
-				if len(content)>2000:
-					self.connectionMsg = self.webhook.send(f'{emoji} {pseudo}', wait=True, avatar_url=bot.user.avatar_url, username=bot.user.name)
-				else:
-					self.connectionMsg.edit(content=content)
-					self.connectionMsg.content = content
+				await self.connectionMsg.edit(content=content)
 			return
 
 		role = message["userRole"]
